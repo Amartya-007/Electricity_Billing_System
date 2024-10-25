@@ -2,9 +2,12 @@ package electricity.billing.system;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Objects;
+import java.sql.ResultSet;
 
-public class Login extends JFrame {
+public class Login extends JFrame implements ActionListener {
     
     JTextField userText, passwordText;
     Choice loginChoice;
@@ -68,12 +71,13 @@ public class Login extends JFrame {
         //* ----------------- Buttons ----------------- *//
         loginButton = new JButton("Login");
         loginButton.setBounds(300, 180, 100, 25);
-        loginButton.setToolTipText("Click to login");
         loginButton.setBackground(Color.GREEN);
+        loginButton.addActionListener(this);
         add(loginButton);
         
         signUpButton = new JButton("Sign Up");
         signUpButton.setBounds(360, 220, 100, 25);
+        loginButton.addActionListener(this);
         signUpButton.setBackground(Color.CYAN);
         
         signUpButton.setToolTipText("Click to sign up");
@@ -81,7 +85,7 @@ public class Login extends JFrame {
         
         cancelButton = new JButton("Cancel");
         cancelButton.setBounds(420, 180, 100, 25);
-        cancelButton.setToolTipText("Click to cancel");
+        cancelButton.addActionListener(this);
         cancelButton.setBackground(Color.RED);
         add(cancelButton);
         //* ----------------- Buttons ----------------- *//
@@ -91,6 +95,39 @@ public class Login extends JFrame {
         
         //! Make the window visible
         setVisible(true);
+    }
+    
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource()==loginButton){
+            String susername = userText.getText();
+            String spassword = passwordText.getText();
+            String suser = loginChoice.getSelectedItem();
+            
+            try{
+                database d = new database();
+                String queryy = "select * from Signup where username = '"+susername+"' and password = '"+spassword+"' and usertype ='"+suser+"'";
+                ResultSet resultSet = d.statement.executeQuery(queryy);
+                
+                if (resultSet.next()){
+                    String meter = resultSet.getString("meter_no");
+                    setVisible(false);
+                    new main_class(suser,meter);
+                }else {
+                    JOptionPane.showMessageDialog(null ,"Invalid Login");
+                }
+                
+            }catch (Exception E){
+                E.printStackTrace();
+            }
+        } else if (e.getSource()==cancelButton) {
+            setVisible(false);
+        } else if (e.getSource()==signUpButton) {
+            setVisible(false);
+            new Signup();
+        }
+        
     }
     
     public static void main(String[] args) {
