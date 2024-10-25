@@ -7,160 +7,162 @@ import java.sql.ResultSet;
 
 public class Signup extends JFrame implements ActionListener {
 	Choice loginASCho;
-	TextField meterText, EmployerText, userNameText, nameText, passwordText;
-	JButton create, back;
-	
-	Signup() {
+	TextField meterText,EmployerText,userNameText,nameText,passwordText;
+	JButton create,back;
+	Signup(){
 		super("Signup Page");
-		getContentPane().setBackground(new Color(168, 203, 255));
+		getContentPane().setBackground(new Color(168,203,255));
 		
 		JLabel createAs = new JLabel("Create Account As");
-		createAs.setBounds(30, 50, 125, 20);
+		createAs.setBounds(30,50,125,20);
 		add(createAs);
 		
 		loginASCho = new Choice();
 		loginASCho.add("Admin");
 		loginASCho.add("Customer");
-		loginASCho.setBounds(170, 50, 120, 20);
+		loginASCho.setBounds(170,50,120,20);
 		add(loginASCho);
 		
 		JLabel meterNo = new JLabel("Meter Number");
-		meterNo.setBounds(30, 100, 125, 20);
+		meterNo.setBounds(30,100,125,20);
 		meterNo.setVisible(false);
 		add(meterNo);
 		
 		meterText = new TextField();
-		meterText.setBounds(170, 100, 125, 20);
+		meterText.setBounds(170,100,125,20);
 		meterText.setVisible(false);
 		add(meterText);
 		
-		JLabel employerLabel = new JLabel("Employer ID");
-		employerLabel.setBounds(30, 130, 125, 20);
-		employerLabel.setVisible(true);
-		add(employerLabel);
+		JLabel Employer = new JLabel("Employer ID");
+		Employer.setBounds(30,100,125,20);
+		Employer.setVisible(true);
+		add(Employer);
 		
 		EmployerText = new TextField();
-		EmployerText.setBounds(170, 130, 125, 20);
+		EmployerText.setBounds(170,100,125,20);
 		EmployerText.setVisible(true);
 		add(EmployerText);
 		
 		JLabel userName = new JLabel("UserName");
-		userName.setBounds(30, 170, 125, 20);
+		userName.setBounds(30,140,125,20);
 		add(userName);
 		
 		userNameText = new TextField();
-		userNameText.setBounds(170, 170, 125, 20);
+		userNameText.setBounds(170,140,125,20);
 		add(userNameText);
 		
+		
 		JLabel name = new JLabel("Name");
-		name.setBounds(30, 210, 125, 20);
+		name.setBounds(30,180,125,20);
 		add(name);
 		
 		nameText = new TextField("");
-		nameText.setBounds(170, 210, 125, 20);
+		nameText.setBounds(170,180,125,20);
 		add(nameText);
 		
 		meterText.addFocusListener(new FocusListener() {
 			@Override
 			public void focusGained(FocusEvent e) {
+			
 			}
 			
 			@Override
 			public void focusLost(FocusEvent e) {
-				try {
+				try{
 					database c = new database();
-					ResultSet resultSet = c.statement.executeQuery("select * from Signup where meter_no = '" + meterText.getText() + "'");
-					if (resultSet.next()) {
+					ResultSet resultSet = c.statement.executeQuery("select * from Signup  where meter_no = '"+meterText.getText()+"'");
+					if (resultSet.next()){
 						nameText.setText(resultSet.getString("name"));
 					}
-				} catch (Exception E) {
-					E.printStackTrace();
+					
+				}catch (Exception E) {
+					throw new RuntimeException("Database operation failed", E);
 				}
 			}
 		});
 		
 		JLabel password = new JLabel("Password");
-		password.setBounds(30, 250, 125, 20);
+		password.setBounds(30,220,125,20);
 		add(password);
 		
 		passwordText = new TextField();
-		passwordText.setBounds(170, 250, 125, 20);
-		passwordText.setEchoChar('*'); // Hide password input
+		passwordText.setBounds(170,220,125,20);
 		add(passwordText);
+		
 		
 		loginASCho.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent e) {
 				String user = loginASCho.getSelectedItem();
-				if (user.equals("Customer")) {
-					employerLabel.setVisible(false);
+				if (user.equals("Customer")){
+					Employer.setVisible(false);
 					EmployerText.setVisible(false);
+					nameText.setEditable(true);
 					meterNo.setVisible(true);
 					meterText.setVisible(true);
-					nameText.setEditable(true); // Make nameText uneditable for customers
-				} else {
-					employerLabel.setVisible(true);
+				}else {
+					Employer.setVisible(true);
 					EmployerText.setVisible(true);
 					meterNo.setVisible(false);
 					meterText.setVisible(false);
-					nameText.setEditable(true); // Make nameText editable for Admin
 				}
+				
 			}
 		});
 		
 		create = new JButton("Create");
-		create.setBackground(new Color(66, 127, 219));
+		create.setBackground(new Color(66,127,219));
 		create.setForeground(Color.black);
-		create.setBounds(50, 310, 100, 25);
+		create.setBounds(50,285,100,25);
 		create.addActionListener(this);
 		add(create);
 		
 		back = new JButton("Back");
-		back.setBackground(new Color(66, 127, 219));
+		back.setBackground(new Color(66,127,219));
 		back.setForeground(Color.black);
-		back.setBounds(180, 310, 100, 25);
+		back.setBounds(180,285,100,25);
 		back.addActionListener(this);
 		add(back);
 		
 		ImageIcon boyIcon = new ImageIcon(ClassLoader.getSystemResource("icon/boy.png"));
-		Image boyImg = boyIcon.getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+		Image boyImg = boyIcon.getImage().getScaledInstance(250,250,Image.SCALE_DEFAULT);
 		ImageIcon boyIcon2 = new ImageIcon(boyImg);
 		JLabel boyLabel = new JLabel(boyIcon2);
-		boyLabel.setBounds(320, 30, 250, 250);
+		boyLabel.setBounds(320,30,250,250);
 		add(boyLabel);
 		
-		setSize(600, 400);
-		setLocation(500, 200);
+		
+		setSize(600,380);
+		setLocation(500,200);
 		setLayout(null);
 		setVisible(true);
 	}
-	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == create) {
+		if (e.getSource()== create){
 			String sloginAs = loginASCho.getSelectedItem();
 			String susername = userNameText.getText();
 			String sname = nameText.getText();
 			String spassword = passwordText.getText();
 			String smeter = meterText.getText();
-			
-			try {
+			try{
 				database c = new database();
-				String query;
-				if (sloginAs.equals("Customer")) { // Corrected condition here
-					query = "insert into Signup values('" + smeter + "', '" + susername + "', '" + sname + "','" + spassword + "','" + sloginAs + "')";
-				} else {
-					query = "update Signup set username = '" + susername + "', password = '" + spassword + "', usertype = '" + sloginAs + "' where meter_no = '" + smeter + "'";
+				String query= null;
+				if (loginASCho.equals("Admin")) {
+					query = "insert into Signup value('" + smeter + "', '" + susername + "', '" + sname + "','" + spassword + "','" + sloginAs + "')";
+				}else {
+					query = "update Signup set username = '"+susername+"', password = '"+spassword+"', usertype = '"+sloginAs+"' where meter_no = '"+smeter+"'";
 				}
 				c.statement.executeUpdate(query);
-				JOptionPane.showMessageDialog(null, "Account Created");
+				
+				JOptionPane.showMessageDialog(null,"Account Created");
 				setVisible(false);
 				new Login();
-			} catch (Exception E) {
-				E.printStackTrace();
-				JOptionPane.showMessageDialog(null, "Error: " + E.getMessage()); // Show error message
+				
+			}catch (Exception E) {
+				throw new RuntimeException("Database operation failed", E);
 			}
-		} else if (e.getSource() == back) {
+		} else if (e.getSource()==back) {
 			setVisible(false);
 			new Login();
 		}
